@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,17 +51,16 @@ public class AddIdeaActivity extends AppCompatActivity {
         String title = mTitle.getText().toString();
         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)){
             String[] actionWords = getResources().getStringArray(R.array.action_words);
+            List<String> actionWordList = Arrays.asList(actionWords);
+
             String[] ideaWords = description.split(" ");
             for (String ideaWord : ideaWords){
-                Log.e("JournalApp", "Idea Word: "+ideaWord);
-                for (String actionWord :actionWords){
-                    Log.e("Journal App", "Action Word: "+actionWord);
-                    if (ideaWord.contains(actionWord) && count < 3){
-                        wordTagsBuilder.append(seprator);
-                        wordTagsBuilder.append(actionWord);
-                        seprator = ",";
-                        count++;
-                    }
+
+                if (actionWordList.contains(String.valueOf(ideaWord.charAt(0)).toUpperCase() + ideaWord.substring(1, ideaWord.length())) && count < 3){
+                    wordTagsBuilder.append(seprator);
+                    wordTagsBuilder.append(String.valueOf(ideaWord.charAt(0)).toUpperCase()).append(ideaWord.substring(1, ideaWord.length()));
+                    seprator = ",";
+                    count++;
                 }
             }
 

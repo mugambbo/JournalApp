@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Arrays;
+import java.util.List;
+
 import co.carrd.abdulmajid.journalapp.database.AppDatabase;
 import co.carrd.abdulmajid.journalapp.model.Idea;
 import co.carrd.abdulmajid.journalapp.util.AppExecutors;
@@ -53,19 +56,22 @@ public class UpdateIdeaActivity extends AppCompatActivity {
         String title = mTitle.getText().toString();
         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)){
             String[] actionWords = getResources().getStringArray(R.array.action_words);
+            List<String> actionWordList = Arrays.asList(actionWords);
+
             String[] ideaWords = description.split(" ");
             for (String ideaWord : ideaWords){
-                for (String actionWord :actionWords){
-                    if (ideaWord.contains(actionWord) && count < 3){
-                        wordTagsBuilder.append(seprator);
-                        wordTagsBuilder.append(actionWord);
-                        seprator = ",";
-                        count++;
-                    }
+                if (actionWordList.contains(String.valueOf(ideaWord.charAt(0)).toUpperCase() + ideaWord.substring(1, ideaWord.length())) && count < 3){
+                    wordTagsBuilder.append(seprator);
+                    wordTagsBuilder.append(String.valueOf(ideaWord.charAt(0)).toUpperCase()).append(ideaWord.substring(1, ideaWord.length()));
+                    seprator = ",";
+                    count++;
                 }
             }
+            idea.setUpdatedAt(DateTimeUtils.todaysDate());
+            idea.setTitle(title);
+            idea.setDescription(description);
+            idea.setWordTags(wordTagsBuilder.toString());
 
-            final Idea idea = new Idea(title, description, wordTagsBuilder.toString(), this.idea.getCreatedAt(), DateTimeUtils.todaysDate());
             AppExecutors.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {

@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         findViewById(R.id.btnGooglePlus).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                configureGoogleSignIn();
                 signInWithGoogle();
             }
         });;
@@ -107,6 +108,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        setTitle(getString(R.string.title_activity_login));
     }
 
     @Override
